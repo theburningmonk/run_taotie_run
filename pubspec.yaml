@@ -1,0 +1,9 @@
+name: run_taotie_run
+version: 1.0.0
+author: Yan Cui <theburningmonk@gmail.com>
+description: A mini game themed after Taotie monsters from Here Be Monsters (http://apps.facebook.com/herebemonsters)
+homepage: https://github.com/theburningmonk/run_taotie_run
+dependencies:
+  browser: any
+  stagexl: any
+  stream_ext: any
