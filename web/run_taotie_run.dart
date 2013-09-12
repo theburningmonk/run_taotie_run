@@ -72,8 +72,7 @@ void loadResources() {
     stage.removeChild(_loadingTextField);
     renderLoop.juggler.remove(_loadingBitmapTween);
 
-
-
+    stage.addChild(new Game(resourceManager));
   }).catchError((error) {
     for(var resource in resourceManager.failedResources) {
       print("Loading resouce failed: ${resource.kind}.${resource.name} - ${resource.error}");
