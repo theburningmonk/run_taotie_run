@@ -10,12 +10,19 @@ part "src/button.dart";
 part "src/characters.dart";
 part "src/dialog.dart";
 part "src/dialog_window.dart";
+part "src/mixins.dart";
+part "src/starium.dart";
 part "src/taotie.dart";
 
 class Game extends Sprite {
   ResourceManager _resourceManager;
-  int _numOfTaoties = 5;
-  List<Taotie> _taoties = new List<Taotie>();
+  Random _random = new Random();
+
+  int _numOfTaoties       = 5;
+  double _minStariumSpeed = 8.0;
+  double _maxStariumSpeed = 5.0;
+  List<Taotie> _taoties   = new List<Taotie>();
+  List<Starium> _stariums = new List<Starium>();
 
   Game(this._resourceManager) {
     new Bitmap(_resourceManager.getBitmapData("background"))
@@ -31,7 +38,7 @@ class Game extends Sprite {
 
   _start() {
     _showIntro()
-      .then((_) => _play());
+      .then((_) => _setup());
   }
 
   Future _showIntro() {
@@ -58,14 +65,15 @@ class Game extends Sprite {
               .catchError((err) => print("Error playing the intro dialogs : $err"));
   }
 
-  Future _play() {
+  _setup() {
     var mousePos         = mousePosition;
     var mouseMove        = html.document.onMouseMove;
 
-    void setPosition (Taotie taotie, int index, num baseX, num baseY) {
-      var maxX = stage.width - taotie.width;
-      var maxY = stage.height - taotie.height;
+    var taotieBackground = _resourceManager.getBitmapData(Characters.TAOTIE);
+    var maxX = stage.width - taotieBackground.width;
+    var maxY = stage.height - taotieBackground.height;
 
+    void setPosition (Taotie taotie, int index, num baseX, num baseY) {
       taotie
         ..x = min(maxX, baseX + index * (taotie.width + 5))
         ..y = min(maxY, baseY);
@@ -81,5 +89,16 @@ class Game extends Sprite {
       StreamExt.delay(mouseMove, new Duration(milliseconds : i * 150))
         ..listen((evt) => setPosition(taotie, i, evt.offset.x, evt.offset.y));
     }
+
+    new Timer.periodic(new Duration(seconds : 3), (_) => _spawnStarium());
+  }
+
+  _spawnStarium() {
+    var speed = _random.nextDouble() * (_minStariumSpeed - _maxStariumSpeed) + _maxStariumSpeed;
+    var starium = new Starium(_resourceManager, speed)
+      ..addTo(this)
+      ..start();
+
+    _stariums.add(starium);
   }
 }
