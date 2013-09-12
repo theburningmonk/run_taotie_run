@@ -10,6 +10,7 @@ part "src/button.dart";
 part "src/characters.dart";
 part "src/dialog.dart";
 part "src/dialog_window.dart";
+part "src/events.dart";
 part "src/mixins.dart";
 part "src/starium.dart";
 part "src/taotie.dart";
@@ -38,7 +39,8 @@ class Game extends Sprite {
 
   _start() {
     _showIntro()
-      .then((_) => _setup());
+      .then((_) => _setupTaoties())
+      .then((_) => _setupStariums());
   }
 
   Future _showIntro() {
@@ -56,7 +58,7 @@ class Game extends Sprite {
                    "..Boss..",
                    "..not to stress you out or anything.."
                    "..but it looks like we have a STARIUM shower inbound.." ]),
-      new Dialog(Characters.TAOTIE,
+      new Dialog(Characters.BOSS,
                  [ "Don't worry lads, I have a cunning plan..",
                    "...",
                    "RUN!!" ])];
@@ -65,7 +67,7 @@ class Game extends Sprite {
               .catchError((err) => print("Error playing the intro dialogs : $err"));
   }
 
-  _setup() {
+  _setupTaoties() {
     var mousePos         = mousePosition;
     var mouseMove        = html.document.onMouseMove;
 
@@ -90,7 +92,25 @@ class Game extends Sprite {
         ..listen((evt) => setPosition(taotie, i, evt.offset.x, evt.offset.y));
     }
 
+    Taotie.onHit.listen((HitEvent evt) {
+      evt.starium.explode();
+      if (evt.taotie.isBoss) {
+        _gameOver();
+      } else {
+        removeChild(evt.taotie);
+      }
+    });
+  }
+
+  _setupStariums() {
     new Timer.periodic(new Duration(seconds : 3), (_) => _spawnStarium());
+
+    Starium.onDisposed.listen((starium) {
+      _stariums.remove(starium);
+      removeChild(starium);
+    });
+
+    onEnterFrame.listen((_) => _taoties.forEach((taotie) => taotie.hitTest(_stariums)));
   }
 
   _spawnStarium() {
@@ -100,5 +120,9 @@ class Game extends Sprite {
       ..start();
 
     _stariums.add(starium);
+  }
+
+  _gameOver() {
+    print("Game Over");
   }
 }
