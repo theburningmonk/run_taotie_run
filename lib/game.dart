@@ -2,6 +2,7 @@ library run_taotie_run;
 
 import 'dart:async';
 import 'dart:html' as html;
+import 'dart:math';
 import 'package:stagexl/stagexl.dart';
 import 'package:stream_ext/stream_ext.dart';
 
@@ -9,10 +10,12 @@ part "src/button.dart";
 part "src/characters.dart";
 part "src/dialog.dart";
 part "src/dialog_window.dart";
+part "src/taotie.dart";
 
 class Game extends Sprite {
   ResourceManager _resourceManager;
-  int taoties = 8;
+  int _numOfTaoties = 5;
+  List<Taotie> _taoties = new List<Taotie>();
 
   Game(this._resourceManager) {
     new Bitmap(_resourceManager.getBitmapData("background"))
@@ -56,22 +59,27 @@ class Game extends Sprite {
   }
 
   Future _play() {
-    var taotieBitmapData = _resourceManager.getBitmapData(Characters.TAOTIE);
     var mousePos         = mousePosition;
     var mouseMove        = html.document.onMouseMove;
 
-    for (var i = 0; i < taoties; i++) {
-      var taotie = new Bitmap(taotieBitmapData)
-        ..x = mousePos.x + i * (taotieBitmapData.width + 10)
-        ..y = mousePos.y
-        ..addTo(this);
+    void setPosition (Taotie taotie, int index, num baseX, num baseY) {
+      var maxX = stage.width - taotie.width;
+      var maxY = stage.height - taotie.height;
 
-      StreamExt.delay(mouseMove, new Duration(milliseconds : i * 200), sync : true)
-        ..listen((evt) {
-          taotie
-            ..x = evt.offset.x + i * (taotieBitmapData.width + 10)
-            ..y = evt.offset.y;
-        });
+      taotie
+        ..x = min(maxX, baseX + index * (taotie.width + 5))
+        ..y = min(maxY, baseY);
+    }
+
+    for (var i = _numOfTaoties-1; i >= 0; i--) {
+      // the first taotie is the boss
+      var taotie = new Taotie(_resourceManager, i == 0)
+        ..addTo(this);
+      setPosition(taotie, i, mousePos.x, mousePos.y);
+      _taoties.add(taotie);
+
+      StreamExt.delay(mouseMove, new Duration(milliseconds : i * 150))
+        ..listen((evt) => setPosition(taotie, i, evt.offset.x, evt.offset.y));
     }
   }
 }
