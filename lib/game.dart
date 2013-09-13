@@ -26,7 +26,10 @@ class Game extends Sprite {
   double _minStariumTime  = 8.0;
   double _maxStariumTime  = 5.0;
   List<Taotie> _taoties   = new List<Taotie>();
+  List<StreamSubscription> _taotieStreams = new List<StreamSubscription>();
   List<Starium> _stariums = new List<Starium>();
+
+  List<Timer> _timers = new List<Timer>();
 
   Game(this._resourceManager) {
     new Bitmap(_resourceManager.getBitmapData("background"))
@@ -67,7 +70,7 @@ class Game extends Sprite {
                    "..but it looks like we have a STARIUM shower inbound.." ]),
       new Dialog(Characters.BOSS,
                  [ "Don't get hit by them STARIUMs or you'll CRACK!!",
-                   "But not to worry lads, I have a cunning plan..",
+                   "Follow me lads, I have a cunning plan..",
                    "...",
                    "RUN!!" ])];
     return DialogWindow.Singleton
@@ -96,17 +99,20 @@ class Game extends Sprite {
       setPosition(taotie, i, mousePos.x, mousePos.y);
       _taoties.add(taotie);
 
-      StreamExt.delay(mouseMove, new Duration(milliseconds : i * 100))
-        ..listen((evt) => setPosition(taotie, i, evt.offset.x, evt.offset.y));
+      var streamSub = StreamExt
+                        .delay(mouseMove, new Duration(milliseconds : i * 100))
+                        .listen((evt) => setPosition(taotie, i, evt.offset.x, evt.offset.y));
+      _taotieStreams.add(streamSub);
     }
 
     Taotie.onHit.listen((HitEvent evt) {
       evt.starium.explode();
+
+      removeChild(evt.taotie);
+
       if (evt.taotie.isBoss) {
         _gameOver();
       } else {
-        removeChild(evt.taotie);
-
         // once the taotie object's removed, let's play the taotie break flipbook in its place to show
         // taotie breaking!
         var textureAtlas = _resourceManager.getTextureAtlas("${Characters.TAOTIE}_break_atlas");
@@ -129,18 +135,21 @@ class Game extends Sprite {
   }
 
   _setupStariums() {
-    new Timer.periodic(new Duration(seconds : 3), (_) => _spawnStarium());
+    _timers.add(new Timer.periodic(new Duration(seconds : 3), (_) => _spawnStarium()));
 
     // every 8 seconds add another second that spawns a starium every 1-3 seconds
-    new Timer.periodic(new Duration(seconds : 8), (_) {
-      new Timer.periodic(new Duration(seconds : _random.nextInt(3) + 1), (_) => _spawnStarium());
+    var launcherTimer = new Timer.periodic(new Duration(seconds : 8), (_) {
+      var timer = new Timer.periodic(new Duration(seconds : _random.nextInt(3) + 1), (_) => _spawnStarium());
+      _timers.add(timer);
     });
+    _timers.add(launcherTimer);
 
     // every 12 seconds speed up the stariums
-    new Timer.periodic(new Duration(seconds : 12), (_) {
+    var speedUpTimer = new Timer.periodic(new Duration(seconds : 12), (_) {
       _minStariumTime = max(1.0, _minStariumTime - 1.0);
       _maxStariumTime = max(2.0, _maxStariumTime - 1.0);
     });
+    _timers.add(speedUpTimer);
 
     Starium.onDisposed.listen((starium) {
       _stariums.remove(starium);
@@ -160,6 +169,17 @@ class Game extends Sprite {
   }
 
   _gameOver() {
-    print("Game Over");
+    _timers.forEach((t) => t.cancel());
+    _taotieStreams.forEach((sub) => sub.cancel());
+
+    Mouse.show();
+
+    var outroDialogs = [
+      new Dialog(Characters.BOSS,
+                 [ "GRRRRR..." ]) ];
+
+    DialogWindow.Singleton
+      .showDialogs(outroDialogs)
+      .then((_) => print("Game Over"));
   }
 }
