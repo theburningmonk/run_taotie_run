@@ -46,7 +46,8 @@ class Game extends Sprite {
 
     _showIntro()
       .then((_) => _setupTaoties())
-      .then((_) => _setupStariums());
+      .then((_) => _setupStariums())
+      .then((_) => Mouse.hide());
   }
 
   Future _showIntro() {
