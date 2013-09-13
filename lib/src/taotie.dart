@@ -1,7 +1,7 @@
 part of run_taotie_run;
 
 class Taotie extends Sprite {
-  static StreamController<HitEvent> _onHitController = new StreamController<HitEvent>.broadcast(sync : true);
+  static StreamController<HitEvent> _onHitController = new StreamController<HitEvent>.broadcast();
 
   ResourceManager _resourceManager;
   bool isBoss;

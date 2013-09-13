@@ -109,6 +109,7 @@ class Game extends Sprite {
       evt.starium.explode();
 
       removeChild(evt.taotie);
+      _taoties.remove(evt.taotie);
 
       if (evt.taotie.isBoss) {
         _gameOver();
@@ -174,9 +175,12 @@ class Game extends Sprite {
 
     Mouse.show();
 
-    var outroDialogs = [
-      new Dialog(Characters.BOSS,
-                 [ "GRRRRR..." ]) ];
+    var outroDialogs = new List<Dialog>();
+    outroDialogs.add(new Dialog(Characters.BOSS, [ "ARRRGGGHHH..." ]));
+
+    if (_taoties.length > 1) {
+      outroDialogs.add(new Dialog(Characters.TAOTIE, ["BBBOOOOOSSSSSSSS!!!!"]));
+    }
 
     DialogWindow.Singleton
       .showDialogs(outroDialogs)
