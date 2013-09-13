@@ -8,13 +8,14 @@ class Starium extends Sprite {
   bool _isDisposed = false;
 
   Bitmap _background;
-  num _speed;
+  num _seconds;
   num _startX;
   num _destinationX;
+  num _stageWidth;
+  num _stageHeight;
   Tween _animation;
 
-  /// speed = number of seconds it takes to traverse the height of the screen
-  Starium(this._resourceManager, this._speed) {
+  Starium(this._resourceManager, this._stageWidth, this._stageHeight, this._seconds) {
     _background = new Bitmap(_resourceManager.getBitmapData("starium"))
       ..addTo(this);
   }
@@ -22,22 +23,22 @@ class Starium extends Sprite {
   static Stream<Starium> get onDisposed => _onDisposedController.stream;
 
   void start() {
-    _startX = _random.nextInt(stage.width.toInt());
+    _startX = _random.nextInt(_stageWidth.toInt() * 2) - _stageWidth / 2;
     x       = _startX;
     y       = -_background.height;
 
     // the starium has to travel at least 1/4 the length of the screen
-    var minDistance = stage.width / 4;
+    var minDistance = _stageWidth / 4;
     do {
-      _destinationX = _random.nextInt(stage.width.toInt());
+      _destinationX = _random.nextInt(_stageWidth.toInt() * 2) - _stageWidth / 2;
     } while ((_startX - _destinationX).abs() < minDistance);
 
     // flip the image if we're going from right to left
     if (_startX > _destinationX) _background.scaleX = -1;
 
-    _animation = stage.juggler.tween(this, _speed)
+    _animation = stage.juggler.tween(this, _seconds)
                     ..animate.x.to(_destinationX)
-                    ..animate.y.to(stage.height)
+                    ..animate.y.to(_stageHeight)
                     ..onComplete = _dispose;
   }
 

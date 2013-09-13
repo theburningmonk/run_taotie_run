@@ -19,9 +19,12 @@ class Game extends Sprite {
   ResourceManager _resourceManager;
   Random _random = new Random();
 
+  num _stageWidth;
+  num _stageHeight;
+
   int _numOfTaoties       = 5;
-  double _minStariumSpeed = 8.0;
-  double _maxStariumSpeed = 5.0;
+  double _minStariumTime  = 8.0;
+  double _maxStariumTime  = 5.0;
   List<Taotie> _taoties   = new List<Taotie>();
   List<Starium> _stariums = new List<Starium>();
 
@@ -38,6 +41,9 @@ class Game extends Sprite {
   }
 
   _start() {
+    _stageWidth  = stage.width;
+    _stageHeight = stage.height;
+
     _showIntro()
       .then((_) => _setupTaoties())
       .then((_) => _setupStariums());
@@ -59,7 +65,8 @@ class Game extends Sprite {
                    "..not to stress you out or anything.."
                    "..but it looks like we have a STARIUM shower inbound.." ]),
       new Dialog(Characters.BOSS,
-                 [ "Don't worry lads, I have a cunning plan..",
+                 [ "Don't get hit by them STARIUMs or you'll CRACK!!",
+                   "But not to worry lads, I have a cunning plan..",
                    "...",
                    "RUN!!" ])];
     return DialogWindow.Singleton
@@ -70,14 +77,14 @@ class Game extends Sprite {
   _setupTaoties() {
     var mousePos         = mousePosition;
     var mouseMove        = html.document.onMouseMove;
-
     var taotieBackground = _resourceManager.getBitmapData(Characters.TAOTIE);
-    var maxX = stage.width - taotieBackground.width;
-    var maxY = stage.height - taotieBackground.height;
+
+    var maxX = _stageWidth - taotieBackground.width;
+    var maxY = _stageHeight - taotieBackground.height;
 
     void setPosition (Taotie taotie, int index, num baseX, num baseY) {
       taotie
-        ..x = min(maxX, baseX + index * (taotie.width + 5))
+        ..x = min(maxX, baseX + index * taotie.width / 2)
         ..y = min(maxY, baseY);
     }
 
@@ -88,7 +95,7 @@ class Game extends Sprite {
       setPosition(taotie, i, mousePos.x, mousePos.y);
       _taoties.add(taotie);
 
-      StreamExt.delay(mouseMove, new Duration(milliseconds : i * 150))
+      StreamExt.delay(mouseMove, new Duration(milliseconds : i * 100))
         ..listen((evt) => setPosition(taotie, i, evt.offset.x, evt.offset.y));
     }
 
@@ -123,6 +130,17 @@ class Game extends Sprite {
   _setupStariums() {
     new Timer.periodic(new Duration(seconds : 3), (_) => _spawnStarium());
 
+    // every 8 seconds add another second that spawns a starium every 1-3 seconds
+    new Timer.periodic(new Duration(seconds : 8), (_) {
+      new Timer.periodic(new Duration(seconds : _random.nextInt(3) + 1), (_) => _spawnStarium());
+    });
+
+    // every 12 seconds speed up the stariums
+    new Timer.periodic(new Duration(seconds : 12), (_) {
+      _minStariumTime = max(1.0, _minStariumTime - 1.0);
+      _maxStariumTime = max(2.0, _maxStariumTime - 1.0);
+    });
+
     Starium.onDisposed.listen((starium) {
       _stariums.remove(starium);
       removeChild(starium);
@@ -132,8 +150,8 @@ class Game extends Sprite {
   }
 
   _spawnStarium() {
-    var speed = _random.nextDouble() * (_minStariumSpeed - _maxStariumSpeed) + _maxStariumSpeed;
-    var starium = new Starium(_resourceManager, speed)
+    var speed = _random.nextDouble() * (_minStariumTime - _maxStariumTime) + _maxStariumTime;
+    var starium = new Starium(_resourceManager, _stageWidth, _stageHeight, speed)
       ..addTo(this)
       ..start();
 
