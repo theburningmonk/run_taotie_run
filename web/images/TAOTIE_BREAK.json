@@ -1,0 +1,36 @@
+{"frames": [
+
+{
+	"filename": "BREAK__01.png",
+	"frame": {"x":2,"y":157,"w":75,"h":76},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":75,"h":76},
+	"sourceSize": {"w":75,"h":76}
+},
+{
+	"filename": "BREAK__02.png",
+	"frame": {"x":2,"y":79,"w":76,"h":76},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":0,"w":76,"h":76},
+	"sourceSize": {"w":78,"h":76}
+},
+{
+	"filename": "BREAK__03.png",
+	"frame": {"x":2,"y":2,"w":79,"h":75},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":79,"h":75},
+	"sourceSize": {"w":79,"h":75}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "TAOTIE_BREAK.png",
+	"format": "RGBA8888",
+	"size": {"w":128,"h":256},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:e4823c0cb293de16874ad2294d0aafea:1/1$"
+}
+}

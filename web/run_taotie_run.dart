@@ -64,6 +64,8 @@ void loadResources() {
     ..addBitmapData("${boss}_overlay",    "images/BOSS_OVERLAY.png")
     ..addBitmapData("${boss}_dialog",     "images/TAOTIE_DIALOG.png")
     ..addBitmapData("${boss}_name_tag",   "images/BOSS_NAME_TAG.png")
+    ..addTextureAtlas("${taotie}_break_atlas",  "images/TAOTIE_BREAK.json", TextureAtlasFormat.JSONARRAY)
+    ..addBitmapData("${taotie}_break",    "images/TAOTIE_BREAK.png")
     ..addBitmapData("end_game",           "images/END_GAME.png");
 
   resourceManager.load().then((_) {

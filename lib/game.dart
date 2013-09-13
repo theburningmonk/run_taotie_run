@@ -98,6 +98,24 @@ class Game extends Sprite {
         _gameOver();
       } else {
         removeChild(evt.taotie);
+
+        // once the taotie object's removed, let's play the taotie break flipbook in its place to show
+        // taotie breaking!
+        var textureAtlas = _resourceManager.getTextureAtlas("${Characters.TAOTIE}_break_atlas");
+        var bitmapDatas = textureAtlas.getBitmapDatas("BREAK");
+
+        var flipBook = new FlipBook(bitmapDatas, 3)
+          ..x = evt.taotie.x
+          ..y = evt.taotie.y
+          ..loop = false
+          ..addTo(this)
+          ..play();
+
+        stage.juggler.add(flipBook);
+        flipBook.onComplete.listen((_) {
+          removeChild(flipBook);
+          stage.juggler.remove(flipBook);
+        });
       }
     });
   }
