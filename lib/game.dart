@@ -14,6 +14,7 @@ part "src/dialog_window.dart";
 part "src/events.dart";
 part "src/mixins.dart";
 part "src/score_board.dart";
+part "src/score_zone.dart";
 part "src/starium.dart";
 part "src/taotie.dart";
 
@@ -53,6 +54,7 @@ class Game extends Sprite {
     _stageHeight = stage.height;
 
     _showIntro()
+      .then((_) => Configuration.SCORE_ZONES.forEach(addChild))
       .then((_) => _setupTaoties())
       .then((_) => _setupStariums())
       .then((_) => Mouse.hide())
@@ -182,10 +184,21 @@ class Game extends Sprite {
     _stariums.add(starium);
   }
 
+  _score(Taotie taotie) {
+    var scoreZone = Configuration.SCORE_ZONES.firstWhere((x) => taotie.hitTestObject(x), orElse : () => null);
+
+    if (scoreZone != null) {
+      print("Score Zone : ${scoreZone.score}");
+      return scoreZone.score;
+    } else {
+      return 0;
+    }
+  }
+
   _onEnterFrame(_) {
     _taoties.forEach((taotie) => taotie.hitTest(_stariums));
 
-    var newScore = _taoties.map((_) => 5).reduce((acc, elem) => acc + elem);
+    var newScore = _taoties.map(_score).reduce((acc, elem) => acc + elem);
     ScoreBoard.Singleton.addScore(newScore);
   }
 
