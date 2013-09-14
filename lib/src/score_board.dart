@@ -9,18 +9,18 @@ class ScoreBoard extends Sprite {
   TextField _hiScoreTextField;
   TextField _globalHiScoreTextField;
 
-  int score, highScore, globalHighScore;
+  int score, highScore;
   String hiScoreKey = "hi-score";
 
   static ScoreBoard Singleton;
 
-  factory ScoreBoard(resourceManager, highScore, globalHighScore) {
+  factory ScoreBoard(resourceManager) {
     return Singleton != null
             ? Singleton
-            : new ScoreBoard._internal(resourceManager, highScore, globalHighScore);
+            : new ScoreBoard._internal(resourceManager);
   }
 
-  ScoreBoard._internal(this._resourceManager, this.highScore, this.globalHighScore) {
+  ScoreBoard._internal(this._resourceManager) {
     score = 0;
     highScore = int.parse(html.window.localStorage.putIfAbsent(hiScoreKey, () => "0"));
 
@@ -44,7 +44,7 @@ class ScoreBoard extends Sprite {
 
   _addScoreLabels() {
     new TextField()
-    ..x = 100
+    ..x = 150
     ..y = _labelY
     ..text = "SCORE"
     ..autoSize = TextFieldAutoSize.CENTER
@@ -52,17 +52,9 @@ class ScoreBoard extends Sprite {
     ..addTo(this);
 
     new TextField()
-      ..x = 300
-      ..y = _labelY
-      ..text = "HI-SCORE"
-      ..autoSize = TextFieldAutoSize.CENTER
-      ..defaultTextFormat = _textFormat
-      ..addTo(this);
-
-    new TextField()
       ..x = 500
       ..y = _labelY
-      ..text = "GLOBAL HI-SCORE"
+      ..text = "HI-SCORE"
       ..autoSize = TextFieldAutoSize.CENTER
       ..defaultTextFormat = _textFormat
       ..addTo(this);
@@ -70,7 +62,7 @@ class ScoreBoard extends Sprite {
 
   _addScores() {
     _scoreTextField = new TextField()
-      ..x = 100
+      ..x = 150
       ..y = _scoreY
       ..text = "$score"
       ..autoSize = TextFieldAutoSize.CENTER
@@ -78,17 +70,9 @@ class ScoreBoard extends Sprite {
       ..addTo(this);
 
     _hiScoreTextField = new TextField()
-      ..x = 300
-      ..y = _scoreY
-      ..text = "$highScore"
-      ..autoSize = TextFieldAutoSize.CENTER
-      ..defaultTextFormat = _textFormat
-      ..addTo(this);
-
-    _globalHiScoreTextField = new TextField()
       ..x = 500
       ..y = _scoreY
-      ..text = "$globalHighScore"
+      ..text = "$highScore"
       ..autoSize = TextFieldAutoSize.CENTER
       ..defaultTextFormat = _textFormat
       ..addTo(this);

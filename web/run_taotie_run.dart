@@ -72,7 +72,8 @@ void loadResources() {
     // sounds
     ..addSound("${taotie}_break",         "sounds/TAOTIE_BREAK.ogg")
     ..addSound("starium_spawn",           "sounds/STARIUM_SPAWN.ogg")
-    ..addSound("eat_cherry",              "sounds/EAT_CHERRY.ogg");
+    ..addSound("eat_cherry",              "sounds/EAT_CHERRY.ogg")
+    ..addSound("background",              "sounds/NLOOP_BACKGROUND_ICE.ogg");
 
   resourceManager.load().then((_) {
 

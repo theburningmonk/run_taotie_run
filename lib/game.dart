@@ -36,8 +36,9 @@ class Game extends Sprite {
   List<Timer> _timers     = new List<Timer>();
 
   Sound _taotieBreakSound, _stariumSound, _eatCherrySound;
+  SoundChannel _backgroundSoundChannel;
 
-  bool _playSound = false;
+  bool _playSound = true;
 
   Game(this._resourceManager) {
     new Bitmap(_resourceManager.getBitmapData("background"))
@@ -48,7 +49,7 @@ class Game extends Sprite {
       ..y = 300
       ..addTo(this);
 
-    new ScoreBoard(_resourceManager, 0, 0)
+    new ScoreBoard(_resourceManager)
       ..addTo(this);
 
     _taotieBreakSound = _resourceManager.getSound("${Characters.TAOTIE}_break");
@@ -69,6 +70,9 @@ class Game extends Sprite {
       .then((_) => Mouse.hide())
       .then((_) => _enterFrameSubscription = onEnterFrame.listen(_onEnterFrame))
       .then((_) => _setupCherrys());
+
+    var backgroundSound  = _resourceManager.getSound("background");
+    _backgroundSoundChannel = backgroundSound.play(true);
   }
 
   Future _showIntro() {
@@ -242,6 +246,7 @@ class Game extends Sprite {
 
     _timers.forEach((t) => t.cancel());
     _taotieStreams.forEach((sub) => sub.cancel());
+    _backgroundSoundChannel.stop();
 
     Mouse.show();
 
