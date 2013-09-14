@@ -19,6 +19,7 @@ part "src/score_zone.dart";
 part "src/starium.dart";
 part "src/start_screen.dart";
 part "src/taotie.dart";
+part "src/tutorial_screen.dart";
 
 class Game extends Sprite {
   ResourceManager _resourceManager;
@@ -65,6 +66,12 @@ class Game extends Sprite {
     _stageHeight = stage.height;
 
     _showStartScreen()
+      .then((startScreen) {
+          removeChild(startScreen);
+
+          var backgroundSound  = _resourceManager.getSound("background");
+          _backgroundSoundChannel = backgroundSound.play(true);
+        })
       .then((_) => _showIntro())
       .then((_) => Configuration.SCORE_ZONES.forEach(addChild))
       .then((_) => _setupTaoties())
@@ -72,9 +79,6 @@ class Game extends Sprite {
       .then((_) => Mouse.hide())
       .then((_) => _enterFrameSubscription = onEnterFrame.listen(_onEnterFrame))
       .then((_) => _setupCherrys());
-
-    var backgroundSound  = _resourceManager.getSound("background");
-    _backgroundSoundChannel = backgroundSound.play(true);
   }
 
   Future _showStartScreen() {

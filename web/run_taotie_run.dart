@@ -54,6 +54,17 @@ void loadResources() {
     ..addBitmapData("ok_button",          "images/OK_BUTTON.png")
     ..addBitmapData("ok_button_hover",    "images/OK_BUTTON_HOVER.png")
     ..addBitmapData("background",         "images/BACKGROUND.png")
+    ..addBitmapData("start_screen",       "images/START_SCREEN.png")
+    ..addBitmapData("how_to_play",        "images/HOW_TO_PLAY.png")
+    ..addBitmapData("how_to_play_hover",  "images/HOW_TO_PLAY_HOVER.png")
+    ..addBitmapData("start",              "images/START.png")
+    ..addBitmapData("start_hover",        "images/START_HOVER.png")
+    ..addBitmapData("game_over",          "images/GAME_OVER.png")
+    ..addBitmapData("next",               "images/NEXT.png")
+    ..addBitmapData("next_hover",         "images/NEXT_HOVER.png")
+    ..addBitmapData("tutorial_1",         "images/TUTORIAL_1.png")
+    ..addBitmapData("tutorial_2",         "images/TUTORIAL_2.png")
+    ..addBitmapData("tutorial_3",         "images/TUTORIAL_3.png")
 
     ..addBitmapData("cherry",             "images/CHERRY.png")
     ..addBitmapData("starium",            "images/STARIUM.png")
@@ -67,8 +78,6 @@ void loadResources() {
     ..addBitmapData("${boss}_name_tag",   "images/BOSS_NAME_TAG.png")
     ..addTextureAtlas("${taotie}_break_atlas",  "images/TAOTIE_BREAK.json", TextureAtlasFormat.JSONARRAY)
     ..addBitmapData("${taotie}_break",    "images/TAOTIE_BREAK.png")
-    ..addBitmapData("start_screen",       "images/START_SCREEN.png")
-    ..addBitmapData("game_over",          "images/GAME_OVER.png")
 
     // sounds
     ..addSound("${taotie}_break",         "sounds/TAOTIE_BREAK.ogg")
