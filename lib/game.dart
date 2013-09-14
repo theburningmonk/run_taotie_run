@@ -35,7 +35,7 @@ class Game extends Sprite {
   List<Cherry> _cherries  = new List<Cherry>();
   List<Timer> _timers     = new List<Timer>();
 
-  Sound _taotieBreakSound, _stariumSound;
+  Sound _taotieBreakSound, _stariumSound, _eatCherrySound;
 
   bool _playSound = false;
 
@@ -52,7 +52,8 @@ class Game extends Sprite {
       ..addTo(this);
 
     _taotieBreakSound = _resourceManager.getSound("${Characters.TAOTIE}_break");
-    _stariumSound = _resourceManager.getSound("starium_spawn");
+    _stariumSound     = _resourceManager.getSound("starium_spawn");
+    _eatCherrySound   = _resourceManager.getSound("eat_cherry");
 
     onAddedToStage.listen((_) => _start());
   }
@@ -195,7 +196,10 @@ class Game extends Sprite {
       removeChild(cherry);
       _cherries.remove(cherry);
 
-      if (eat) ScoreBoard.Singleton.addScore(Configuration.FRUIT_SCORE);
+      if (eat) {
+        _eatCherrySound.play(false);
+        ScoreBoard.Singleton.addScore(Configuration.FRUIT_SCORE);
+      }
     }
   }
 
