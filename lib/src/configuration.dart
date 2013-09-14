@@ -22,4 +22,9 @@ class Configuration {
     ..y = 0;
 
   static final List<ScoreZone> SCORE_ZONES  = [ _tier1, _tier2, _tier3 ];
+
+  static const int MIN_FRUIT_TIME           = 2; // fruit drops at least this many seconds after previous drop
+  static const int MAX_FRUIT_TIME           = 5; // fruit drops at most this many seconds after previous drop
+  static const int FRUIT_DURATION           = 10; // how long does the fruit stay around for
+  static const int FRUIT_SCORE              = 100000;
 }

@@ -8,6 +8,7 @@ import 'package:stream_ext/stream_ext.dart';
 
 part "src/button.dart";
 part "src/characters.dart";
+part "src/cherry.dart";
 part "src/configuration.dart";
 part "src/dialog.dart";
 part "src/dialog_window.dart";
@@ -23,8 +24,7 @@ class Game extends Sprite {
   StreamSubscription  _enterFrameSubscription;
   Random _random = new Random();
 
-  num _stageWidth;
-  num _stageHeight;
+  num _stageWidth, _stageHeight;
 
   int _numOfTaoties       = Configuration.NUM_OF_TAOTIES;
   double _minStariumTime  = Configuration.INIT_MIN_STARIUM_TIME;
@@ -32,7 +32,12 @@ class Game extends Sprite {
   List<Taotie> _taoties   = new List<Taotie>();
   List<StreamSubscription> _taotieStreams = new List<StreamSubscription>();
   List<Starium> _stariums = new List<Starium>();
+  List<Cherry> _cherries  = new List<Cherry>();
   List<Timer> _timers     = new List<Timer>();
+
+  Sound _taotieBreakSound, _stariumSound;
+
+  bool _playSound = false;
 
   Game(this._resourceManager) {
     new Bitmap(_resourceManager.getBitmapData("background"))
@@ -46,6 +51,9 @@ class Game extends Sprite {
     new ScoreBoard(_resourceManager, 0, 0)
       ..addTo(this);
 
+    _taotieBreakSound = _resourceManager.getSound("${Characters.TAOTIE}_break");
+    _stariumSound = _resourceManager.getSound("starium_spawn");
+
     onAddedToStage.listen((_) => _start());
   }
 
@@ -58,7 +66,8 @@ class Game extends Sprite {
       .then((_) => _setupTaoties())
       .then((_) => _setupStariums())
       .then((_) => Mouse.hide())
-      .then((_) => _enterFrameSubscription = onEnterFrame.listen(_onEnterFrame));
+      .then((_) => _enterFrameSubscription = onEnterFrame.listen(_onEnterFrame))
+      .then((_) => _setupCherrys());
   }
 
   Future _showIntro() {
@@ -119,8 +128,7 @@ class Game extends Sprite {
       removeChild(evt.taotie);
       _taoties.remove(evt.taotie);
 
-      var sound = _resourceManager.getSound("${Characters.TAOTIE}_break");
-      sound.play(false);
+      if (_playSound) _taotieBreakSound.play(false);
 
       if (evt.taotie.isBoss) {
         _gameOver();
@@ -129,7 +137,6 @@ class Game extends Sprite {
         // taotie breaking!
         var textureAtlas = _resourceManager.getTextureAtlas("${Characters.TAOTIE}_break_atlas");
         var bitmapDatas = textureAtlas.getBitmapDatas("BREAK");
-
         var flipBook = new FlipBook(bitmapDatas, 3)
           ..x = evt.taotie.x
           ..y = evt.taotie.y
@@ -144,6 +151,17 @@ class Game extends Sprite {
         });
       }
     });
+  }
+
+  _spawnStarium() {
+    var speed = _random.nextDouble() * (_maxStariumTime - _minStariumTime) + _minStariumTime;
+    var starium = new Starium(_resourceManager, _stageWidth, _stageHeight, speed)
+      ..addTo(this)
+      ..start();
+
+    if (_playSound) _stariumSound.play(false);
+
+    _stariums.add(starium);
   }
 
   _setupStariums() {
@@ -172,31 +190,44 @@ class Game extends Sprite {
     });
   }
 
-  _spawnStarium() {
-    var speed = _random.nextDouble() * (_maxStariumTime - _minStariumTime) + _minStariumTime;
-    var starium = new Starium(_resourceManager, _stageWidth, _stageHeight, speed)
-      ..addTo(this)
-      ..start();
+  _removeCherry(Cherry cherry, [ bool eat = false ]) {
+    if (_cherries.contains(cherry)) {
+      removeChild(cherry);
+      _cherries.remove(cherry);
 
-    var sound = _resourceManager.getSound("starium_spawn");
-    sound.play(false);
+      if (eat) ScoreBoard.Singleton.addScore(Configuration.FRUIT_SCORE);
+    }
+  }
 
-    _stariums.add(starium);
+  _spawnCherry() {
+    var cherry = new Cherry(_resourceManager, Configuration.FRUIT_SCORE);
+    cherry
+      ..x = _random.nextInt((_stageWidth - cherry.width).toInt())
+      ..y = _random.nextInt((_stageHeight - cherry.height).toInt());
+    addChildAt(cherry, 1);
+    _cherries.add(cherry);
+
+    stage.juggler.delayCall(() => _removeCherry(cherry), Configuration.FRUIT_DURATION);
+  }
+
+  Future _setupCherrys() {
+    int getDelay () => Configuration.MIN_FRUIT_TIME + _random.nextInt(Configuration.MAX_FRUIT_TIME - Configuration.MIN_FRUIT_TIME);
+
+    return new Future.delayed(new Duration(seconds : getDelay()), _spawnCherry)
+                .then((_) => _setupCherrys());
   }
 
   _score(Taotie taotie) {
     var scoreZone = Configuration.SCORE_ZONES.firstWhere((x) => taotie.hitTestObject(x), orElse : () => null);
-
-    if (scoreZone != null) {
-      print("Score Zone : ${scoreZone.score}");
-      return scoreZone.score;
-    } else {
-      return 0;
-    }
+    return scoreZone.score;
   }
 
   _onEnterFrame(_) {
     _taoties.forEach((taotie) => taotie.hitTest(_stariums));
+
+    new List.from(_cherries)
+          .where((cherry) => _taoties.any((taotie) => taotie.hitTestObject(cherry)))
+          .forEach((cherry) => _removeCherry(cherry, true));
 
     var newScore = _taoties.map(_score).reduce((acc, elem) => acc + elem);
     ScoreBoard.Singleton.addScore(newScore);
