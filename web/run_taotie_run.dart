@@ -54,7 +54,6 @@ void loadResources() {
     ..addBitmapData("ok_button",          "images/OK_BUTTON.png")
     ..addBitmapData("ok_button_hover",    "images/OK_BUTTON_HOVER.png")
     ..addBitmapData("background",         "images/BACKGROUND.png")
-    ..addBitmapData("score_board",        "images/SCORE_BOARD.png")
 
     ..addBitmapData("starium",            "images/STARIUM.png")
     ..addBitmapData("trap",               "images/SPIRIT_TABLET.png")
