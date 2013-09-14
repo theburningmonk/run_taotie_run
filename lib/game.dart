@@ -12,6 +12,7 @@ part "src/dialog.dart";
 part "src/dialog_window.dart";
 part "src/events.dart";
 part "src/mixins.dart";
+part "src/score_board.dart";
 part "src/starium.dart";
 part "src/taotie.dart";
 
@@ -184,6 +185,9 @@ class Game extends Sprite {
 
     DialogWindow.Singleton
       .showDialogs(outroDialogs)
-      .then((_) => print("Game Over"));
+      .then((_) {
+        var overlay = new Bitmap(_resourceManager.getBitmapData("game_over"));
+        addChild(overlay);
+      });
   }
 }
