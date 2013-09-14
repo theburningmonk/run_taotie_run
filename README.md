@@ -8,7 +8,14 @@ For those unfamiliar with **Here Be Monsters**, `Taotie` is the name of a monste
 ![Taotie's almanac page](http://s3.amazonaws.com/run_taotie_run/Taotie_almanac.png)
 
 
+The objective of this mini game is to **avoid** the `Stariums` falling from the sky and survive as long as you can whilst accumulate as many as you can by:
+* keeping more of your followers alive means your score go up quicker
+* spend more time around the center of the screen to rack up score quicker
+* collect random `Cheeries` before they disappear to get bonus points
 
+some in-game hints:
+
+![Hint] (http://s3.amazonaws.com/run_taotie_run/TUTORIAL_2.png)
 
 A live playable version of the game is available [here](http://bit.ly/14VNou5).
 
