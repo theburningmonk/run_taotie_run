@@ -32,6 +32,20 @@ class StartScreen extends Sprite {
       tutorialScreen.show()
         .then((_) => removeChild(tutorialScreen));
     });
+
+    var hbmLogo = new Bitmap(_resourceManager.getBitmapData("hbm_logo"));
+    new Button(hbmLogo, hbmLogo, hbmLogo)
+      ..x = 590
+      ..y = 535
+      ..addTo(this)
+      ..onMouseClick.listen((_) => html.window.open("http://apps.facebook.com/herebemonsters", "Here Be Monsters game"));
+
+    var me = new Bitmap(_resourceManager.getBitmapData("me"));
+    new Button(me, me, me)
+      ..x = 602
+      ..y = 489
+      ..addTo(this)
+      ..onMouseClick.listen((_) => html.window.open("https://twitter.com/theburningmonk", "Twitter"));
   }
 
   Future show() {

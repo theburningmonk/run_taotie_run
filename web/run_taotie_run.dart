@@ -65,6 +65,8 @@ void loadResources() {
     ..addBitmapData("tutorial_1",         "images/TUTORIAL_1.png")
     ..addBitmapData("tutorial_2",         "images/TUTORIAL_2.png")
     ..addBitmapData("tutorial_3",         "images/TUTORIAL_3.png")
+    ..addBitmapData("hbm_logo",           "images/HBM_LOGO.png")
+    ..addBitmapData("me",                 "images/ME.png")
 
     ..addBitmapData("cherry",             "images/CHERRY.png")
     ..addBitmapData("starium",            "images/STARIUM.png")
