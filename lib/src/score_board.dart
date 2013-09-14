@@ -9,9 +9,8 @@ class ScoreBoard extends Sprite {
   TextField _hiScoreTextField;
   TextField _globalHiScoreTextField;
 
-  int score;
-  int highScore;
-  int globalHighScore;
+  int score, highScore, globalHighScore;
+  String hiScoreKey = "hi-score";
 
   static ScoreBoard Singleton;
 
@@ -23,6 +22,8 @@ class ScoreBoard extends Sprite {
 
   ScoreBoard._internal(this._resourceManager, this.highScore, this.globalHighScore) {
     score = 0;
+    highScore = int.parse(html.window.localStorage.putIfAbsent(hiScoreKey, () => "0"));
+
     Singleton = this;
 
     _addScoreLabels();
@@ -36,6 +37,8 @@ class ScoreBoard extends Sprite {
     if (score > highScore) {
       highScore = score;
       _hiScoreTextField.text = "$highScore";
+
+      html.window.localStorage[hiScoreKey] = "$highScore";
     }
   }
 

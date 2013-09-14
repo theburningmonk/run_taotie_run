@@ -197,7 +197,7 @@ class Game extends Sprite {
       _cherries.remove(cherry);
 
       if (eat) {
-        _eatCherrySound.play(false);
+        if (_playSound) _eatCherrySound.play(false);
         ScoreBoard.Singleton.addScore(Configuration.FRUIT_SCORE);
       }
     }
