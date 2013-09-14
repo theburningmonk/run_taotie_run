@@ -67,6 +67,7 @@ void loadResources() {
     ..addBitmapData("${boss}_name_tag",   "images/BOSS_NAME_TAG.png")
     ..addTextureAtlas("${taotie}_break_atlas",  "images/TAOTIE_BREAK.json", TextureAtlasFormat.JSONARRAY)
     ..addBitmapData("${taotie}_break",    "images/TAOTIE_BREAK.png")
+    ..addBitmapData("start_screen",       "images/START_SCREEN.png")
     ..addBitmapData("game_over",          "images/GAME_OVER.png")
 
     // sounds

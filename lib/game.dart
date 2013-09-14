@@ -17,6 +17,7 @@ part "src/mixins.dart";
 part "src/score_board.dart";
 part "src/score_zone.dart";
 part "src/starium.dart";
+part "src/start_screen.dart";
 part "src/taotie.dart";
 
 class Game extends Sprite {
@@ -63,7 +64,8 @@ class Game extends Sprite {
     _stageWidth  = stage.width;
     _stageHeight = stage.height;
 
-    _showIntro()
+    _showStartScreen()
+      .then((_) => _showIntro())
       .then((_) => Configuration.SCORE_ZONES.forEach(addChild))
       .then((_) => _setupTaoties())
       .then((_) => _setupStariums())
@@ -73,6 +75,13 @@ class Game extends Sprite {
 
     var backgroundSound  = _resourceManager.getSound("background");
     _backgroundSoundChannel = backgroundSound.play(true);
+  }
+
+  Future _showStartScreen() {
+    var startScreen = new StartScreen(_resourceManager)
+        ..addTo(this);
+
+    return startScreen.show();
   }
 
   Future _showIntro() {
