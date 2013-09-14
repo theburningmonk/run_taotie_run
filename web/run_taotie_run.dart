@@ -66,7 +66,11 @@ void loadResources() {
     ..addBitmapData("${boss}_name_tag",   "images/BOSS_NAME_TAG.png")
     ..addTextureAtlas("${taotie}_break_atlas",  "images/TAOTIE_BREAK.json", TextureAtlasFormat.JSONARRAY)
     ..addBitmapData("${taotie}_break",    "images/TAOTIE_BREAK.png")
-    ..addBitmapData("game_over",          "images/GAME_OVER.png");
+    ..addBitmapData("game_over",          "images/GAME_OVER.png")
+
+    // sounds
+    ..addSound("${taotie}_break",         "sounds/TAOTIE_BREAK.ogg")
+    ..addSound("starium_spawn",           "sounds/STARIUM_SPAWN.ogg");
 
   resourceManager.load().then((_) {
 

@@ -117,6 +117,9 @@ class Game extends Sprite {
       removeChild(evt.taotie);
       _taoties.remove(evt.taotie);
 
+      var sound = _resourceManager.getSound("${Characters.TAOTIE}_break");
+      sound.play(false);
+
       if (evt.taotie.isBoss) {
         _gameOver();
       } else {
@@ -172,6 +175,9 @@ class Game extends Sprite {
     var starium = new Starium(_resourceManager, _stageWidth, _stageHeight, speed)
       ..addTo(this)
       ..start();
+
+    var sound = _resourceManager.getSound("starium_spawn");
+    sound.play(false);
 
     _stariums.add(starium);
   }
