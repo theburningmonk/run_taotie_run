@@ -121,9 +121,9 @@ class Game extends Sprite {
     var maxX = _stageWidth - taotieBackground.width;
     var maxY = _stageHeight - taotieBackground.height;
 
-    void setPosition (Taotie taotie, int index, num baseX, num baseY) {
+    void setPosition (Taotie taotie, num baseX, num baseY) {
       taotie
-        ..x = min(maxX, baseX + index * taotie.width / 2)
+        ..x = min(maxX, baseX)
         ..y = min(maxY, baseY);
     }
 
@@ -131,12 +131,11 @@ class Game extends Sprite {
       // the first taotie is the boss
       var taotie = new Taotie(_resourceManager, i == 0)
         ..addTo(this);
-      setPosition(taotie, i, mousePos.x, mousePos.y);
+      setPosition(taotie, mousePos.x, mousePos.y);
       _taoties.add(taotie);
 
-      var streamSub = StreamExt
-                        .delay(mouseMove, new Duration(milliseconds : i * Configuration.TAOTIE_MOVE_DELAY))
-                        .listen((evt) => setPosition(taotie, i, evt.offset.x, evt.offset.y));
+      var streamSub = StreamExt.zip(mouseMove, mouseMove.skip(i * 5), (evt, _) => evt)
+                        .listen((evt) => setPosition(taotie, evt.offset.x, evt.offset.y));
       _taotieStreams.add(streamSub);
     }
 
