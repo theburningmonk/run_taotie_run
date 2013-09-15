@@ -17,7 +17,7 @@ some in-game hints:
 
 ![Hint] (http://s3.amazonaws.com/run_taotie_run/TUTORIAL_2.png)
 
-A live playable version of the game is available [here](http://bit.ly/14VNou5).
+A live playable version of the game is available [here](http://runtaotierun.theburningmonk.com).
 
 [![Build Status](https://drone.io/github.com/theburningmonk/run_taotie_run/status.png)](https://drone.io/github.com/theburningmonk/run_taotie_run/latest)
 
