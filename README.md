@@ -44,3 +44,7 @@ Eat the `Cherries` before they disappear to get bonus points.
 Game over when the `BOSS` gets hit...
 
 ![Screenshot](http://s3.amazonaws.com/run_taotie_run/screenshot4.png)
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/theburningmonk/run_taotie_run/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
